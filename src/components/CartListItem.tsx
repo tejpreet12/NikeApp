@@ -1,25 +1,34 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import { changeCartItemQuantity } from '../redux/slices/cart/cartSlice';
+import { useDispatch } from 'react-redux';
 
-type Product = {
-  name: string;
-  image: string;
-};
+// type Product = {
+//   name: string;
+//   image: string;
+// };
 
-type CartItem = {
-  product: Product;
-  size: string | number; // Depending on your app's data structure.
-  quantity: number;
-};
+// type CartItem = {
+//   product: Product;
+//   size: string | number | undefined; // Depending on your app's data structure.
+//   quantity: number;
+// };
 
-type CartListItemProps = {
-  cartItem: CartItem;
-};
+// type CartListItemProps = {
+//   cartItem: CartItem;
+// };
 
-const CartListItem = ({cartItem}: CartListItemProps) => {
-  const increaseQuantity = () => {};
+const CartListItem = ({cartItem}: any) => {
 
-  const decreaseQuantity = () => {};
+  const dispatch = useDispatch();
+
+  const increaseQuantity = () => {
+    dispatch(changeCartItemQuantity({productId: cartItem.product.id, amount: 1}))
+  };
+
+  const decreaseQuantity = () => {
+    dispatch(changeCartItemQuantity({productId: cartItem.product.id, amount: -1}))
+  };
 
   return (
     <View style={styles.container}>
@@ -30,19 +39,19 @@ const CartListItem = ({cartItem}: CartListItemProps) => {
 
         <View style={styles.footer}>
           <Feather
-            onPress={increaseQuantity}
+            onPress={decreaseQuantity}
             name="minus-circle"
             size={24}
             color="gray"
           />
           <Text style={styles.quantity}>{cartItem.quantity}</Text>
           <Feather
-            onPress={decreaseQuantity}
+            onPress={increaseQuantity}
             name="plus-circle"
             size={24}
             color="gray"
           />
-          <Text style={styles.itemTotal}>$320.0</Text>
+          <Text style={styles.itemTotal}>$ {cartItem.product.price * cartItem.quantity}</Text>
         </View>
       </View>
     </View>
